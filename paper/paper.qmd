@@ -201,7 +201,7 @@ This assumption is relevant primarily for confidence intervals and hypothesis te
 
 #### Software
 
-I conducted the analysis in R using RStudio and prepared the report with Quarto. The data were cleaned and transformed using the `tidyverse` packages, and the regression model was fitted using the `lm()` function. Figures were created using `ggplot2`, and the final report was rendered as a PDF using Quarto [@R-core; @tidyverse; @quarto].
+I conducted the analysis in R using RStudio and prepared the report with Quarto. The data were cleaned and transformed using the `tidyverse` packages, and the regression model was fitted using the `lm()` function. Figures were created using `ggplot2`, and the final report was rendered as a PDF using Quarto [@R-core-2025; @tidyverse2019; @quarto2025].
 
 ## V. Results
 
@@ -234,7 +234,7 @@ F\text{ statistic} & 4827 & & & \\
 \end{array}
 $$
 
-The fitted simple linear regression model examined the association between the percentage of students meeting or exceeding the mathematics standard and the percentage meeting or exceeding the ELA/Literacy standard. The estimated model was
+The fitted simple linear regression model examined the association between ELA and Math mean scale score of schools across California. The estimated model was
 
 $$
 \widehat{\text{ELA proficiency}}
