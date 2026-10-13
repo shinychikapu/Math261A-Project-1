@@ -1,8 +1,10 @@
 ---
-title: "Math 261A Project 1"
+title: "Examining the Association Between Grade 11 ELA and Mathematics CAASPP Scores in California Schools"
 author: "Gia Thy Le"
 date: "2026-09-25"
 bibliography: references.bib
+echo: false
+warning: false
 nocite: |
   @gelman_regression_2021
 format: pdf
@@ -11,25 +13,29 @@ editor: visual
 
 ## I. Abstract
 
-This study examines whether Grade 11 mathematics achievement is associated with English Language Arts/Literacy achievement across California schools. Using 2024–25 California Assessment of Student Performance and Progress (CAASPP) data, I use mean mathematics and ELA/Literacy scale scores in a simple linear regression model [@caaspp2025]. The results show a strong positive association between achievement in the two subjects, contrary to the initial expectation that stronger performance in one subject might be associated with weaker performance in the other. However, schools are nested within districts, and diagnostic plots suggest that the linear model may not fully capture the relationship; therefore, the results should be interpreted as a school-level association rather than a causal relationship.
+This study examines whether Grade 11 mathematics achievement is associated with English Language Arts/Literacy achievement across California schools. Using 2023–24 California Assessment of Student Performance and Progress (CAASPP) data, I fit a simple linear regression model predicting mean ELA/Literacy scale scores from mean mathematics scale scores [@caaspp_research_2024]. The fitted model indicates a strong positive association: a one point increase in a school’s mean mathematics score is associated with an estimated 0.876 point increase in its mean ELA/Literacy score. The estimated intercept is 355.4, and the model explains 87.90% of the variability in ELA/Literacy scores ($R^2=0.8790$). The association is statistically significant ($t=108.74$, $p<2.2\times10^{-16}$), with a residual standard error of 25.96. These results contradict the initial expectation that stronger performance in one subject might be associated with weaker performance in the other. However, schools are nested within districts which indicate independent assumption is not appropriated, and diagnostic plots suggest that the linear model may not fully capture the relationship. Therefore, the findings should be interpreted as a school-level association between cAASPP Math and ELA score.
 
 ## II. Introduction
 
-A common stereotype is that students who perform well in mathematics are less proficient in writing and language arts, while students who excel in language arts may struggle with mathematics. Although mathematics and English Language Arts/Literacy require different knowledge and skills, success in both subjects may also reflect broader academic factors, such as learning opportunities, school resources, and student engagement. This project examines whether performance in these two subject areas is associated across California schools.
+A common stereotype is that students who perform well in mathematics are less proficient in writing and language arts, while students who excel in language arts may struggle with mathematics. Although mathematics and English Language Arts/Literacy (ELA) require different knowledge and skills, success in both subjects may also reflect broader academic factors, such as learning opportunities, school resources, and student engagement. To address this stereotype, this project examines: Is there an association between 11th-grade Math and ELA CAASPP mean scale scores across California schools? We would expect a negative association between them if the stereotype was to be true.
 
-To investigate this question, I use data from the 2024–25 California Assessment of Student Performance and Progress (CAASPP) Smarter Balanced Summative Assessments [@caaspp2025]. The analysis focuses on California schools and uses the percentage of students meeting or exceeding the achievement standard as the measure of proficiency in each subject. I use simple linear regression to examine whether mathematics proficiency is associated with English Language Arts/Literacy proficiency. The predictor is math mean scale score, and the response is the corresponding mean scale score for English Language Arts/Literacy. If schools with higher mathematics proficiency also tend to have higher English Language Arts/Literacy proficiency, this may suggest that the two outcomes are related at the school level.
+To investigate this question, I use data from the 2023–24 California Assessment of Student Performance and Progress (CAASPP) Smarter Balanced Summative Assessments [@caaspp_research_2024]. The analysis focuses on California schools and uses mean scale test scores of Math and English Language Art/Literacy of the CAASPP exam to represent profiency in both subject. I use simple linear regression to examine whether mathematics proficiency is linearly associated with English Language Arts/Literacy proficiency. The predictor is math mean scale score, and the response is the corresponding mean scale score for English Language Arts/Literacy. If schools with higher mathematics proficiency also tend to have higher English Language Arts/Literacy proficiency, this may suggest that the two outcomes are related at the school level.
 
-The analysis found a strong positive association between mathematics and ELA/Literacy proficiency across California schools, contrary to the initial expectation that stronger performance in one subject might be associated with weaker performance in the other. However, the school are nested in district so errors might not be independent and diagnostic plots suggested that a simple linear model may not fully capture the relationship. Therefore, the results provide evidence of an association but should be interpreted cautiously, and further analysis is needed to determine whether a linear model is appropriate.
+The analysis found a strong positive association between mathematics and ELA/Literacy proficiency across California schools, contrary to the initial expectation that stronger performance in one subject might be associated with weaker performance in the other. However, the school are nested in district so errors might not be independent and diagnostic plots suggested that a simple linear model may not fully capture the relationship. Therefore, the results provide evidence of an association but should be interpreted cautiously, and further analysis is needed to determine whether a linear model is appropriate. All code for this project are publicly available on GitHub at https://github.com/shinychikapu/Math261A-Project-1.
+
+In this report, section 3 introduces the data and important variables. Section 4 explains the methodology and model assumptions. Section 5 presents the results and shows relevant plots. Section 6 discusses the findings and limitation of our selected method.
 
 ## III. Data
 
-This analysis uses data from the 2024–25 California Assessment of Student Performance and Progress (CAASPP) Smarter Balanced Summative Assessments [@caaspp2025]. The assessments measure student achievement in English Language Arts/Literacy (ELA) and mathematics for students in Grades 3–8 and Grade 11. The data are publicly available from the California Department of Education and are reported for schools, districts, counties, and the state.
+The analysis uses the 2023--24 CAASPP statewide research file [@caaspp_research_2024] and the CAASPP research-file record definitions for the variable names and field meanings [@caaspp_research_format_2024].
 
-The observational unit for this analysis is a California school. The original research file contains aggregate results organized by educational entity, student group, grade, and subject. I restricted the data to school-level records (`Type ID = 07`), all students (`Student Group ID = 001`), only juniors (`Grade = 11`), and the 2024–25 testing year.
+This analysis uses data from the 2023–24 California Assessment of Student Performance and Progress (CAASPP) Smarter Balanced Summative Assessments [@caaspp2024]. The assessments measure student achievement in English Language Arts/Literacy (ELA) and mathematics for students in Grades 3–8 and Grade 11. The data are publicly available from the California Department of Education and are reported for schools, districts, counties, and the state.
 
-The primary variables are the test identifier, the number of students tested with valid scores, and the mean scale score. The test identifier distinguishes English Language Arts/Literacy (`Test ID = 1`) from mathematics (`Test ID = 2`). The number of students tested with scores represents the number of tested students who received valid assessment scores. The response variable is the mean ELA/Literacy scale score, while the predictor variable is the mean mathematics scale score. Both mean scale scores measure the average achievement of students in a school for the selected subject and grade. The dataset also includes contextual variables, such as county code, district code, district name, school code, and school name, which identify each school and its location.
+The observational unit for this analysis is a California school. The original research file contains aggregate results organized by educational entity, student group, grade, and subject. I restricted the data to school-level records (`Type ID = 07`), all students (`Student Group ID = 001`), only juniors (`Grade = 11`), and the 2023–24 testing year.
 
-The data were transformed before analysis because ELA and mathematics results were initially stored in separate rows. I selected the relevant school, subject, student group, grade, enrollment, testing, and proficiency variables. I converted numeric fields to numeric format to ensure the columns data types are correct. I then matched the ELA and mathematics records by school so that each row in the final analysis dataset contained both the ELA and mathematics mean scale scores. Schools without valid results for either subject were excluded.
+The primary variables are the test identifier, the number of students tested with valid scores, and the mean scale score. The test identifier distinguishes English Language Arts/Literacy (`Test ID = 1`) from mathematics (`Test ID = 2`). The number of students tested with scores represents the number of tested students who received valid assessment scores. The response variable is the mean ELA/Literacy scale score, while the predictor variable is the mean mathematics scale score, both of which are from 0-2900. Both mean scale scores measure the average scale score of students in a school for the selected subject and grade. It is calculated by taking the sum of scale scores for students with valid scores in the selected school divided by the Number of Tests with Valid Scores. The dataset also includes contextual variables, such as county code, district code, district name, school code, and school name, which identify each school and its location.
+
+The data were transformed before analysis because ELA and mathematics results were initially stored in separate rows. I selected the relevant school, subject, student group, grade, enrollment, testing, mean score for ELA and Math. I converted numeric fields to numeric format to ensure the columns data types are correct. I then matched the ELA and mathematics records by school so that each row in the final analysis dataset contained both the ELA and mathematics mean scale scores. Schools without valid results for either subject were excluded. After filtering, 1630 schools remained. 
 
 The CAASPP research file provides several measures of achievement like the percentages of students who exceeded, met, nearly met, or did not meet the achievement standard. It also reports results for specific content areas, such as reading, writing, problem solving, and communicating mathematical reasoning. For this analysis, I use the mean scale score as both the predictor and response because it provides a continuous measure of overall subject-level achievement and preserves more information than grouping students into achievement categories.
 
@@ -39,7 +45,7 @@ Because the dataset contains aggregate school-level percentages rather than indi
 #| echo: false
 #| warning: false
 library(tidyverse)
-data = read.csv("W:\\Math261A-Project-1\\data\\sb_ca2024_1_csv_v1.csv")
+data = read.csv("..\\data\\sb_ca2024_1_csv_v1.csv")
 
 cleaned <- data |>
   mutate(
@@ -118,36 +124,13 @@ cleaned <- data |>
     ela_pct_met_and_above = ELA_proficiency,
     math_pct_met_and_above = Math_proficiency
   )
-
-head(cleaned)
 ```
 
-## IV. Methods
-
-### Simple Linear Regreesion Model
-
-To examine the association between mathematics and ELA/Literacy achievement, I used a simple linear regression model. The response variable is the mean Grade 11 ELA/Literacy scale score, and the explanatory variable is the mean Grade 11 mathematics scale score for the same school. The model is
-
-$$ Y_i = \beta\_0 + \beta\_1X_i + \varepsilon\_i, $$
-
-where $(Y_i)$ is the mean ELA/Literacy scale score for school (i), $(X_i)$ is the mean mathematics scale score for school (i), $(\beta\_0)$ is the intercept, $(\beta\_1)$ is the expected change in mean ELA/Literacy score associated with a one-point increase in mean mathematics score, and $(\varepsilon\_i)$ is the random error.
-
-### Model Assumptions and Validation
-
-#### 1. Validity
-
-CAASPP mean scale scores directly measure Grade 11 achievement in mathematics and ELA/Literacy, which are the two quantities in the research question. Linear regression is useful because it quantifies the expected change in ELA/Literacy achievement associated with a change in mathematics achievement.
-
-#### 2. Representativeness
-
-The representativeness assumption is reasonable when the target population is defined as California schools with valid Grade 11 CAASPP results during the 2024--25 school year. Generalization to individual students, schools outside California, or other years can be made but need careful interpretation.
-
-#### 3. Additivity and Linearity
-
-This assumption can be cheacked easily using a scatterplot.
+Below is a scatter plot of the data
 
 ```{r}
-#| echo: false
+#| label: fig-scatter
+#| fig-cap: "ELA vs Math CAASPP mean scale scores of Grade 11 across California schools."
 ggplot(
   cleaned,
   aes(
@@ -185,11 +168,61 @@ ggplot(
   )
 ```
 
-It is safe to assume Math Mean Scale Score and ELA Mean Scale Score has a linear relationship.
+Overall there appears to be a positive correlation and surprisingly only a smaller percentage of schools' mean scores meet the standard met threshold for Grade 11 in 2024 (ELA mean scale score \> 2583 & Math mean scale score \> 2628).
+
+```{r}
+#| output: false
+summary(cleaned)
+```
+
+\begin{table}[ht]
+\centering
+\caption{Summary Statistics of the Data}
+\label{tbl-summary}
+
+\begin{tabular}{lrrrrrr}
+\hline
+Variable & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. \\
+\hline
+ELA Students Tested & 11.00 & 47.25 & 171.50 & 233.31 & 398.00 & 1030.00 \\
+Math Students Tested & 11.00 & 47.25 & 171.50 & 232.80 & 397.00 & 1017.00 \\
+ELA Mean Scale Score & 2353 & 2506 & 2568 & 2560 & 2613 & 2784 \\
+Math Mean Scale Score & 2338 & 2453 & 2514 & 2515 & 2563 & 2811 \\
+ELA Percent Met and Above & 0.00 & 25.29 & 47.94 & 45.28 & 64.40 & 100.00 \\
+Math Percent Met and Above & 0.00 & 4.55 & 16.02 & 20.69 & 30.61 & 100.00 \\
+\hline
+\end{tabular}
+\end{table}
+
+The average mean scale score for ELA is 2560 and for Math is 2515 so on average mean scale score for ELA is higher than math for the CAAPS test.
+
+## IV. Methods
+
+### Simple Linear Regreesion Model
+
+To examine the association between mathematics and ELA/Literacy achievement, I used a simple linear regression model. The response variable is the mean Grade 11 ELA/Literacy scale score, and the explanatory variable is the mean Grade 11 mathematics scale score for the same school. The model is
+
+$$ Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, $$
+
+where $(Y_i)$ is the mean ELA/Literacy scale score for school (i), $(X_i)$ is the mean mathematics scale score for school (i), $(\beta_0)$ is the intercept, $(\beta_1)$ is the expected change in mean ELA/Literacy score associated with a one-point increase in mean mathematics score, and $(\varepsilon_i)$ is the random error.
+
+### Model Assumptions and Validation
+
+#### 1. Validity
+
+CAASPP mean scale scores directly measure Grade 11 achievement in mathematics and ELA/Literacy, which are the two quantities in the research question. Linear regression is useful because it quantifies the expected change in ELA/Literacy mean scale score associated with a change in mathematics mean scale score.
+
+#### 2. Representativeness
+
+The representativeness assumption is reasonable when the target population is defined as California schools with valid Grade 11 CAASPP results during the 2023-24 school year. Generalization to individual students, schools outside California, or other years can be made but need careful interpretation.
+
+#### 3. Additivity and Linearity
+
+It is safe to assume Math Mean Scale Score and ELA Mean Scale Score has a linear relationship because the scatter plot of the data shows a roughly linear trend.
 
 #### 4. Independence of Errors
 
-Schools within the same district may share policies, resources, and student characteristics, so their errors may be correlated. Therefore, complete independence of the school-level errors cannot be guaranteed. Residuals were examined by district and county for evidence of clustering. This potential dependence is treated as a limitation of the analysis.
+Schools within the same district may share policies, resources, and student characteristics, so their errors may be correlated. Therefore, complete independence of the school-level errors cannot be guaranteed. This potential dependence is treated as a limitation of the analysis.
 
 #### 5. Equal Variance of Errors
 
@@ -197,7 +230,7 @@ The residuals should have approximately constant variance across the range of fi
 
 #### 6. Normality of Errors
 
-This assumption is relevant primarily for confidence intervals and hypothesis tests. A normal Q--Q plot to assess whether the residuals were approximately normally distributed.
+This assumption is relevant primarily for confidence intervals and hypothesis tests. We can use a normal Q-Q plot to assess whether the residuals were approximately normally distributed after fitting the model.
 
 #### Software
 
@@ -211,67 +244,70 @@ The result is summarized in the table below
 #| echo: false
 #| output: false
 model <- lm(
-  ela_pct_met_and_above ~ math_pct_met_and_above,
+  ELA_mean_scale_score ~ Math_mean_scale_score,
   data = cleaned
 )
 summary(model)
 ```
 
-$$
-\begin{array}{lrrrr}
+\begin{table}[ht]
+\centering
+\caption{Summary of Regression result}
+\label{tbl-reg}
+
+\begin{tabular}{lrrrr}
 \hline
-\text{Term} & \text{Estimate} & \text{Std. Error} & t\text{ value} & p\text{-value} \\
+Term & Estimate & Std. Error & $t$ value & $p$-value \\
 \hline
-\text{Intercept} & 22.932 & 0.444 & 51.60 & <2\times 10^{-16} \\
-\text{Math proficiency} & 1.080 & 0.016 & 69.48 & <2\times 10^{-16} \\
+Intercept & 355.4 & 20.28 & 17.52 & $<2\times 10^{-16}$ \\
+Math mean scale score & 0.8764 & 0.0081 & 108.74 & $<2\times 10^{-16}$ \\
 \hline
-\text{Residual standard error} & 12.39 & & & \\
-R^2 & 0.7478 & & & \\
-\text{Adjusted }R^2 & 0.7477 & & & \\
-F\text{ statistic} & 4827 & & & \\
-\text{Model }p\text{-value} & <2.2\times 10^{-16} & & & \\
+Residual standard error & 25.96 & & & \\
+$R^2$ & 0.8790 & & & \\
+Adjusted $R^2$ & 0.8789 & & & \\
+$F$ statistic & 11830 & & & \\
+Model $p$-value & $<2.2\times 10^{-16}$ & & & \\
 \hline
-\end{array}
-$$
+\end{tabular}
+\end{table}
 
 The fitted simple linear regression model examined the association between ELA and Math mean scale score of schools across California. The estimated model was
 
-$$
-\widehat{\text{ELA proficiency}}
-=
-22.932
-+
-1.080(\text{Math proficiency}).
-$$
+$$ \widehat{\text{ELA Mean Scale Score}} = 355.4 + 0.8764(\text{Math Mean Scale Score}). $$
 
-The estimated regression slope was 1.080, meaning that with a one point increase in math mean scale score we expect an estimated increase of 1.080 in ELA score. The estimated intercept was 22.932, which represents the predicted ELA/Literacy proficiency when mathematics proficiency is zero. Because a mathematics proficiency level of zero is outside the range of most schools in this dataset, the intercept is not substantively meaningful on its own. The model had an $R^2$ value of 0.748, meaning that approximately 74.8% of the variation in school-level ELA/Literacy proficiency was explained by the linear relationship with mathematics proficiency. Let's see the regression fit, residual plot and qq plot to check the assumptions
+The estimated regression slope was 0.8764, meaning that with a one point increase in math mean scale score we expect an estimated increase of 0.8764 in ELA score. The slope estimate's p-value is really small so we reject the null hypothesis and conclude that there is sufficient evidence of association between ELA Mean Scale Score and Math Mean Scale Score. The estimated intercept was 355.4, which represents the average ELA score when mathematics score is zero. This value is outside of our data range so the intercept is not very meaningful. The model had an $R^2$ value of 0.879, meaning that approximately 87.9% of the variation in school level ELA score was explained by the linear relationship with math score. We can also calculate the correlation coefficient $r = \sqrt{R^2} = \sqrt{0.879} \approx 0.938$ which indicate a strong positive correlation.
 
 ```{r}
 #| echo: false
-library(patchwork)
-
+#| #| label: fig-scatter
+#| fig-cap: "Fitted OLS line for ELA Mean Scale Score ~ Math Mean Scale Score"
 plot_data <- model.frame(model)
 plot_data$fitted_values <- fitted(model)
 plot_data$residuals <- resid(model)
 
-p1 <- ggplot(
+ggplot(
   plot_data,
   aes(
-    x = math_pct_met_and_above,
-    y = ela_pct_met_and_above
+    x = Math_mean_scale_score,
+    y = ELA_mean_scale_score
   )
 ) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "blue") +
   theme_minimal() +
   labs(
-    title = "Regression Line",
-    x = "Mathematics Proficiency (%)",
-    y = "ELA/Literacy Proficiency (%)"
-  )
+    title = "Fitted Regression Line",
+    x = "Math Mean Scale Score",
+    y = "ELA Mean Scale Score"
+)
+```
 
-# 2. Residuals versus fitted values
-p2 <- ggplot(
+The upward trend indicates that schools with higher mathematics proficiency generally also tend to have higher ELA proficiency. The spread of points around the regression line is quite even, however toward higher Math mean scale core, the points tend to scatter below the line.
+
+```{r}
+#| label: fig-residuals
+#| fig-cap: "Residuals versus fitted values for the linear regression model"
+ggplot(
   plot_data,
   aes(
     x = fitted_values,
@@ -289,9 +325,15 @@ p2 <- ggplot(
     title = "Residuals versus Fitted Values",
     x = "Fitted Values",
     y = "Residuals"
-  )
+)
+```
 
-p3 <- ggplot(
+The residual diagnostic plots suggest that the relationship is not perfectly linear and unequal variances. In particular, the residuals show a curved pattern and unequal spread across fitted values. The residuals spread from -100 to 90 for fitted values ranging from 2500 to 2600. Whereas for fitted values ranging from 2600 to 2700 the spread is much smaller, from -80 to 60.
+
+```{r}
+#| label: fig-qq
+#| fig-cap: "Normal Q-Q Plot"
+ggplot(
   plot_data,
   aes(sample = residuals)
 ) +
@@ -303,16 +345,15 @@ p3 <- ggplot(
     x = "Theoretical Quantiles",
     y = "Sample Quantiles"
   )
-
-p1 / (p2 | p3)
 ```
 
-The upward trend indicates that schools with higher mathematics proficiency generally also tend to have higher ELA proficiency. However, the residual diagnostic plots suggest that the relationship is not perfectly linear. In particular, the residuals show a curved pattern and unequal spread across fitted values. The residuals spread from -20 to 40 so it is a small effect. The errors are also somewhat normal so confident interval and prediction intervals can be performed.
+The normal Q–Q plot shows that most residuals lie close to the reference line, suggesting that the residuals are approximately normally distributed. There are some deviations in the tails, indicating a few unusually large residuals, but the normality assumption is still plausible.
 
-The results answer the research question by showing a strong positive school-level association between mathematics and ELA proficiency which is contradictory to our original belief. However, more assessment is needed to check if linear regression is appropriated.
+The results answer the research question by showing a strong positive school-level association between mathematics and ELA proficiency in California, which is contradictory to our original belief and generalization to individuals should be carefully made. More assessment is also needed to check if linear regression is appropriated as the model did not pass the linearity assumption check. I would assume a polynomial regression of degree two will improve the fit but for the scope of this project we will only assess simple linear regression's performance.
 
 ## VI. Discussion
 
-The regression showed a strong positive relationship between mathematics mean scale score and ELA/Literacy performance. A one-point increase in mathematics mean scale score was associated with an estimated 1.080-point increase in ELA/Literacy score. The intercept was 22.932, but it is not substantively meaningful because a mathematics score of zero is outside the observed range. The model explained approximately 74.8% of the variation in ELA/Literacy outcomes. A key limitation is that the residual plots suggest the relationship may not be fully linear, while the independence of errors may be questionable because schools are nested within districts and may share similar characteristics.
+The regression showed a strong positive relationship between mathematics mean scale score and ELA/Literacy performance through high a correlation coefficient $r = 0.938$. A one point increase in mathematics mean scale score is associated with an estimated 0.8764 point increase in ELA/Literacy mean scale score. The intercept was 355.4, which is the avarage mean scale ELA score when math mean scale score is 0 which is not very meaningful given that this point is far away from our observed range. The model explained approximately 87.9% of the variation in ELA/Literacy outcomes. A key limitation is that the residual plots suggest the relationship may not be fully linear, and the independence of errors may be questionable because schools are nested within districts and may share similar characteristics. As stated in result a polynomial might be a describe the relation between our response and predictor variables better so future work can be expanded on this.
 
 # References {#refs}
+
