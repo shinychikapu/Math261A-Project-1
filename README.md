@@ -18,7 +18,7 @@ Is there an association between 11th-grade Math and ELA CAASPP mean scale scores
 
 ## Data
 
-The data come from the California Assessment of Student Performance and Progress (CAASPP) 2024–25 Smarter Balanced Summative Assessments:
+The data come from the California Assessment of Student Performance and Progress (CAASPP) 2023–24 Smarter Balanced Summative Assessments:
 
 <https://caaspp-elpac.ets.org/caaspp/ResearchFileListSB?ps=true&lstTestYear=2024&lstTestType=B&lstCounty=00&lstDistrict=00000&lstFocus=a>
 
@@ -32,7 +32,7 @@ The data are publicly available through the California Department of Education. 
 - RStudio or another R-compatible editor
 - Quarto
 - The `tidyverse` R package
-
+- broom and knitr R package
 ### Steps
 
 1. Clone this repository:
